@@ -31,6 +31,7 @@ public class Main {
 			menu.exibirMenu();
 			opcaoEscolhida = scanner.nextInt();
 
+			// Cadastrar novo cliente
 			if (opcaoEscolhida == 1) {
 				Cliente cliente = Main.cadastrarCliente(scanner);
 				if (cliente == null) {
@@ -44,15 +45,15 @@ public class Main {
 
 				List<Conta> lConta = BancoDeDados.buscarContaPorCliente(cpf);
 
+				// Conta jÃ¡ cadastrada
 				for (Conta conta : lConta) {
 					if (opcaoConta == conta.getTipoConta().getId()) {
-						System.out.println("Conta já criada");
+						System.out.println("Conta jÃ¡ cadastrada");
 						continue;
 					}
 				}
 
-//				new ContaBO(cliente, (opcaoConta == 1 ? TipoConta.CORRENTE : TipoConta.POUPANCA));
-
+				// Tipo de conta
 				if (opcaoConta == 1) {
 					new ContaBO(cliente, TipoConta.CORRENTE);
 				} else {
@@ -60,8 +61,9 @@ public class Main {
 				}
 			}
 
+			// Transferencia entre contas
 			else if (opcaoEscolhida == 2) {
-				System.out.print("Número da conta que recebe: ");
+				System.out.print("NÃºmero da conta que recebe: ");
 				String numeroContaRecebe = scanner.next();
 				Conta contaRecebe = BancoDeDados.buscaContaPorNumero(numeroContaRecebe);
 
@@ -69,7 +71,7 @@ public class Main {
 					continue;
 				}
 
-				System.out.print("Número da conta que paga: ");
+				System.out.print("Nï¿½mero da conta que paga: ");
 				String numeroContaPaga = scanner.next();
 
 				Conta contaPaga = BancoDeDados.buscaContaPorNumero(numeroContaPaga);
@@ -78,16 +80,17 @@ public class Main {
 					continue;
 				}
 
-				System.out.print("Valor da transferência: ");
+				System.out.print("Valor da transferï¿½ncia: ");
 				double valor = scanner.nextDouble();
 
 				ContaBO contaBO = new ContaBO(contaPaga);
 				contaBO.transferirDeContaParaConta(contaRecebe, valor);
 			}
 
+			// DepÃ³sito em conta
 			else if (opcaoEscolhida == 3) {
 
-				System.out.println("Número da conta: ");
+				System.out.println("Nï¿½mero da conta: ");
 				String numeroConta = scanner.next();
 
 				Conta conta = BancoDeDados.buscaContaPorNumero(numeroConta);
@@ -104,8 +107,9 @@ public class Main {
 				contaBO.depositar(valor);
 			}
 
+			// Saldo da conta
 			else if (opcaoEscolhida == 4) {
-				System.out.print("Número da conta: ");
+				System.out.print("Nï¿½mero da conta: ");
 				String numeroConta = scanner.next();
 
 				Conta conta = BancoDeDados.buscaContaPorNumero(numeroConta);
@@ -118,6 +122,7 @@ public class Main {
 				contaBO.consultarSaldo();
 			}
 
+			// Taxas
 			else if (opcaoEscolhida == 5) {
 				List<Conta> lConta = BancoDeDados.buscarTodasAsContas();
 
@@ -127,8 +132,9 @@ public class Main {
 				}
 			}
 
+			// PIX
 			else if (opcaoEscolhida == 6) {
-				System.out.print("Número da conta que recebe: ");
+				System.out.print("Nï¿½mero da conta que recebe: ");
 				String numeroConta = scanner.next();
 				Conta conta = BancoDeDados.buscaContaPorNumero(numeroConta);
 
@@ -142,6 +148,7 @@ public class Main {
 				String chavePix = "";
 				TipoChavePix tcp = null;
 
+				// Cadastrar PIX
 				if (tipoPix == 4) {
 					chavePix = UUID.randomUUID().toString();
 					tcp = TipoChavePix.ALEATORIO;
@@ -172,8 +179,9 @@ public class Main {
 				contaBO.adicionarPix(pix);
 			}
 			
+			// Transferencia PIX
 			else if (opcaoEscolhida == 7) {
-				System.out.println("Número da conta que paga: ");
+				System.out.println("Nï¿½mero da conta que paga: ");
 				String numeroConta = scanner.next();
 				
 				Conta conta = BancoDeDados.buscaContaPorNumero(numeroConta);
@@ -188,7 +196,7 @@ public class Main {
 				Conta contaRecebe = BancoDeDados.getContaPorPix(chavePix);
 				
 				if (contaRecebe == null) {
-					System.out.print("Chave PIX não cadastrada");
+					System.out.print("Chave PIX nï¿½o cadastrada");
 					continue;
 				}
 				
@@ -197,9 +205,15 @@ public class Main {
 				ContaBO contaBO = new ContaBO(conta);
 				contaBO.transferirDeContaParaConta(contaRecebe, valor);
 			}
-
+			
+			// Efetuar compra
 			else if (opcaoEscolhida == 8) {
-				System.out.println("Até logo!");
+				
+			}
+
+			// Saida
+			else if (opcaoEscolhida == 0) {
+				System.out.println("Atï¿½ logo!");
 				System.exit(0);
 			}
 		}
@@ -213,7 +227,7 @@ public class Main {
 		System.out.print("Logradouro: ");
 		String logradouro = scanner.nextLine();
 
-		System.out.println("Número: ");
+		System.out.println("Nï¿½mero: ");
 		int numero = scanner.nextInt();
 
 		System.out.println("CEP: ");
@@ -260,7 +274,7 @@ public class Main {
 			return clienteBO.cadastrarCliente(nome, cpf, dataNascimento, endereco);
 
 		} catch (ParseException e) {
-			System.out.println("Cliente não cadastrado");
+			System.out.println("Cliente nï¿½o cadastrado");
 			return null;
 		}
 
