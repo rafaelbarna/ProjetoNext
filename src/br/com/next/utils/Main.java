@@ -8,16 +8,21 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
 
+import br.com.next.bean.Bandeira;
+import br.com.next.bean.CartaoDebito;
 import br.com.next.bean.Cliente;
 import br.com.next.bean.Conta;
 import br.com.next.bean.Endereco;
 import br.com.next.bean.Pix;
 import br.com.next.bean.TipoChavePix;
+import br.com.next.bean.TipoCliente;
 import br.com.next.bean.TipoConta;
 import br.com.next.bo.ClienteBO;
 import br.com.next.bo.ContaBO;
 
 public class Main {
+
+	private static Bandeira bandeira;
 
 	public static void main(String[] args) {
 
@@ -45,10 +50,10 @@ public class Main {
 
 				List<Conta> lConta = BancoDeDados.buscarContaPorCliente(cpf);
 
-				// Conta já cadastrada
+				// Se conta já cadastrada
 				for (Conta conta : lConta) {
 					if (opcaoConta == conta.getTipoConta().getId()) {
-						System.out.println("Conta já cadastrada");
+						System.out.println("Uma conta já está cadastrada");
 						continue;
 					}
 				}
@@ -63,36 +68,38 @@ public class Main {
 
 			// Transferencia entre contas
 			else if (opcaoEscolhida == 2) {
-				System.out.print("Número da conta que recebe: ");
+				System.out.print("Conta que recebe: ");
 				String numeroContaRecebe = scanner.next();
+				// Procura conta no BD
 				Conta contaRecebe = BancoDeDados.buscaContaPorNumero(numeroContaRecebe);
 
 				if (contaRecebe == null) {
 					continue;
 				}
 
-				System.out.print("N�mero da conta que paga: ");
+				System.out.print("Conta que paga: ");
 				String numeroContaPaga = scanner.next();
-
+				// Procura conta no BD
 				Conta contaPaga = BancoDeDados.buscaContaPorNumero(numeroContaPaga);
 
 				if (contaPaga == null) {
 					continue;
 				}
 
-				System.out.print("Valor da transfer�ncia: ");
+				System.out.print("Valor da transferência: ");
 				double valor = scanner.nextDouble();
-
 				ContaBO contaBO = new ContaBO(contaPaga);
+				// Efetua transferência entre contas
 				contaBO.transferirDeContaParaConta(contaRecebe, valor);
 			}
 
 			// Depósito em conta
 			else if (opcaoEscolhida == 3) {
 
-				System.out.println("N�mero da conta: ");
+				System.out.print("Conta: ");
 				String numeroConta = scanner.next();
 
+				// Busca conta no BD
 				Conta conta = BancoDeDados.buscaContaPorNumero(numeroConta);
 
 				if (conta == null) {
@@ -103,15 +110,16 @@ public class Main {
 				double valor = scanner.nextDouble();
 
 				ContaBO contaBO = new ContaBO(conta);
-
+				// + valor na conta selecionada
 				contaBO.depositar(valor);
 			}
 
 			// Saldo da conta
 			else if (opcaoEscolhida == 4) {
-				System.out.print("N�mero da conta: ");
+				System.out.print("Conta: ");
 				String numeroConta = scanner.next();
-
+				
+				// Busca conta no BD
 				Conta conta = BancoDeDados.buscaContaPorNumero(numeroConta);
 
 				if (conta == null) {
@@ -119,6 +127,7 @@ public class Main {
 				}
 
 				ContaBO contaBO = new ContaBO(conta);
+				// Retorna saldo
 				contaBO.consultarSaldo();
 			}
 
@@ -134,7 +143,7 @@ public class Main {
 
 			// PIX
 			else if (opcaoEscolhida == 6) {
-				System.out.print("N�mero da conta que recebe: ");
+				System.out.print("Número da conta que recebe: ");
 				String numeroConta = scanner.next();
 				Conta conta = BancoDeDados.buscaContaPorNumero(numeroConta);
 
@@ -181,7 +190,7 @@ public class Main {
 			
 			// Transferencia PIX
 			else if (opcaoEscolhida == 7) {
-				System.out.println("N�mero da conta que paga: ");
+				System.out.print("Conta pagante: ");
 				String numeroConta = scanner.next();
 				
 				Conta conta = BancoDeDados.buscaContaPorNumero(numeroConta);
@@ -196,7 +205,7 @@ public class Main {
 				Conta contaRecebe = BancoDeDados.getContaPorPix(chavePix);
 				
 				if (contaRecebe == null) {
-					System.out.print("Chave PIX n�o cadastrada");
+					System.out.print("Chave PIX não cadastrada");
 					continue;
 				}
 				
@@ -206,14 +215,79 @@ public class Main {
 				contaBO.transferirDeContaParaConta(contaRecebe, valor);
 			}
 			
-			// Efetuar compra
+			// Cadastrar CC CD
 			else if (opcaoEscolhida == 8) {
+				System.out.print("Número da conta: ");
+				String numeroConta = scanner.next();
+				Conta conta = BancoDeDados.buscaContaPorNumero(numeroConta);
 				
+				if (conta == null) {
+					continue;
+				}
+				
+				// Verifica TipoCliente e aumenta o Limite disponivel para CC e CD
+				TipoCliente tc = conta.getCliente().getTipoCliente();
+				double limite = 0;
+				if (tc == TipoCliente.COMUM) {
+					limite = 200;
+					System.out.print("Seu limite é de: " + limite);
+				}
+				else if (tc == TipoCliente.PREMIUM) {
+					limite = 1000;
+					System.out.print("Seu limite é de: " + limite);
+				}
+				else if (tc == TipoCliente.SUPER) {
+					limite = 5000;
+					System.out.print("Seu limite é de: " + limite);
+				}
+				
+				System.out.println("Qual tipo de cartão gostaria de solicitar? ");
+				System.out.print("1 - Cartão Débito - 1");
+				System.out.print("2 - Cartão Crédito - 2");
+				System.out.println("3 - Multi-Cartão - 3");
+				int opcaoCartão = scanner.nextInt();
+				
+				if (opcaoCartão == 1) {
+					String numero = UUID.randomUUID().toString();
+					System.out.print("Bandeira\n1 - Visa\n 2- MasterCard");
+					int tipoBandeira = scanner.nextInt();
+					Bandeira bandeiraCD = null;
+					
+					if (tipoBandeira == 1) {
+						bandeiraCD = Bandeira.VISA;
+					}
+					else if
+						(tipoBandeira == 2) {
+							bandeiraCD = Bandeira.MASTERCARD;
+					}
+					System.out.print("Digite a senha: ");
+					String senha = scanner.next();
+					
+					System.out.print("Seu cartão está ativo.\nSeu limite é: " + limite);
+					
+					CartaoDebito cd = new CartaoDebito(numero, bandeira, senha, true, limite);
+				}
 			}
-
+			
+			// Efetuar compra
+			else if (opcaoEscolhida == 9) {
+				
+				menu.menuCompra();
+				int opcaoCompra = scanner.nextInt();
+				
+				System.out.print("Quanto deseja gastar: ");
+				double valorCompra = scanner.nextDouble();
+				
+				System.out.print("Confirma compra no valor de R$ %.2f?\nS/N: ");
+				String confirmaCompra = scanner.next();
+				
+				if (confirmaCompra == "S") {
+					
+				}
+			}
 			// Saida
 			else if (opcaoEscolhida == 0) {
-				System.out.println("At� logo!");
+				System.out.println("Até logo!");
 				System.exit(0);
 			}
 		}
@@ -227,19 +301,19 @@ public class Main {
 		System.out.print("Logradouro: ");
 		String logradouro = scanner.nextLine();
 
-		System.out.println("N�mero: ");
+		System.out.print("N�mero: ");
 		int numero = scanner.nextInt();
 
-		System.out.println("CEP: ");
+		System.out.print("CEP: ");
 		String cep = scanner.next();
 
-		System.out.println("Bairro: ");
+		System.out.print("Bairro: ");
 		String bairro = scanner.next();
 
-		System.out.println("Cidade: ");
+		System.out.print("Cidade: ");
 		String cidade = scanner.next();
 
-		System.out.println("Estado: ");
+		System.out.print("Estado: ");
 		String estado = scanner.nextLine();
 
 		endereco.setLogradouro(logradouro);
@@ -257,7 +331,7 @@ public class Main {
 
 		while (true) {
 
-			System.out.println("CPF: ");
+			System.out.print("CPF: ");
 			cpf = scanner.next();
 
 			if (clienteBO.validarCpf(cpf)) {
@@ -274,7 +348,7 @@ public class Main {
 			return clienteBO.cadastrarCliente(nome, cpf, dataNascimento, endereco);
 
 		} catch (ParseException e) {
-			System.out.println("Cliente n�o cadastrado");
+			System.out.println("Cliente não cadastrado");
 			return null;
 		}
 

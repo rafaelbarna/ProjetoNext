@@ -12,7 +12,7 @@ public class CartaoCredito extends Cartao {
 	private Date dataVencimento;
 	private double valorFatura;
 	
-	public CartaoCredito(String numero, String bandeira, String senha, boolean ativo, double limite) {
+	public CartaoCredito(String numero, Bandeira bandeira, String senha, boolean ativo, double limite) {
 		super(numero, bandeira, senha, ativo);
 		this.limite = limite;
 		this.compras = new ArrayList<Compras>();

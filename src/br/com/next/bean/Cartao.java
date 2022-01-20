@@ -6,11 +6,11 @@ public abstract class Cartao {
 	
 	private String id;
 	private String numero;
-	private String bandeira;
+	private Bandeira bandeira;
 	private String senha;
 	private boolean ativo;
 	
-	public Cartao(String numero, String bandeira, String senha, boolean ativo) {
+	public Cartao(String numero, Bandeira bandeira, String senha, boolean ativo) {
 		this.numero = numero;
 		this.bandeira = bandeira;
 		this.senha = senha;
@@ -21,7 +21,7 @@ public abstract class Cartao {
 	public String getNumero() {
 		return numero;
 	}
-	public String getBandeira() {
+	public Bandeira getBandeira() {
 		return bandeira;
 	}
 	public String getSenha() {
@@ -33,7 +33,7 @@ public abstract class Cartao {
 	public void setNumero(String numero) {
 		this.numero = numero;
 	}
-	public void setBandeira(String bandeira) {
+	public void setBandeira(Bandeira bandeira) {
 		this.bandeira = bandeira;
 	}
 	public void setSenha(String senha) {

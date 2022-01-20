@@ -4,7 +4,7 @@ public class CartaoDebito extends Cartao {
 	
 	private double limiteTransacao;
 
-	public CartaoDebito(String numero, String bandeira, String senha, boolean ativo, double limite) {
+	public CartaoDebito(String numero, Bandeira bandeira, String senha, boolean ativo, double limite) {
 		super(numero, bandeira, senha, ativo);
 		this.limiteTransacao = limite;
 	}
