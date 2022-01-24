@@ -11,7 +11,7 @@ public abstract class Cartao {
 	private boolean ativo;
 	
 	public Cartao(String numero, Bandeira bandeira, String senha, boolean ativo) {
-		this.numero = numero;
+		setNumero(numero);
 		this.bandeira = bandeira;
 		this.senha = senha;
 		this.ativo = ativo;
@@ -42,11 +42,9 @@ public abstract class Cartao {
 	public void setAtivo(boolean ativo) {
 		this.ativo = ativo;
 	}
-
 	public String getId() {
 		return id;
 	}
-
 	public void setId(String id) {
 		this.id = id;
 	}

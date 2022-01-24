@@ -9,6 +9,7 @@ import java.util.Scanner;
 import java.util.UUID;
 
 import br.com.next.bean.Bandeira;
+import br.com.next.bean.CartaoCredito;
 import br.com.next.bean.CartaoDebito;
 import br.com.next.bean.Cliente;
 import br.com.next.bean.Conta;
@@ -23,6 +24,8 @@ import br.com.next.bo.ContaBO;
 public class Main {
 
 	private static Bandeira bandeira;
+	private static String senha;
+	private static double limite;
 
 	public static void main(String[] args) {
 
@@ -36,13 +39,14 @@ public class Main {
 			menu.exibirMenu();
 			opcaoEscolhida = scanner.nextInt();
 
-			// Cadastrar novo cliente
+			// Cadastrar novo Cliente.
 			if (opcaoEscolhida == 1) {
 				Cliente cliente = Main.cadastrarCliente(scanner);
 				if (cliente == null) {
 					continue;
 				}
 
+				// Cadastra Conta depois de Cliente.
 				menu.exibirMenuConta();
 				int opcaoConta = scanner.nextInt();
 
@@ -50,7 +54,7 @@ public class Main {
 
 				List<Conta> lConta = BancoDeDados.buscarContaPorCliente(cpf);
 
-				// Se conta já cadastrada
+				// Conta já cadastrada.
 				for (Conta conta : lConta) {
 					if (opcaoConta == conta.getTipoConta().getId()) {
 						System.out.println("Uma conta já está cadastrada");
@@ -58,7 +62,7 @@ public class Main {
 					}
 				}
 
-				// Tipo de conta
+				// Cadastro Cliente > Tipo de conta
 				if (opcaoConta == 1) {
 					new ContaBO(cliente, TipoConta.CORRENTE);
 				} else {
@@ -108,10 +112,12 @@ public class Main {
 
 				System.out.println("Digite o valor: ");
 				double valor = scanner.nextDouble();
-
 				ContaBO contaBO = new ContaBO(conta);
 				// + valor na conta selecionada
 				contaBO.depositar(valor);
+				
+				contaBO.consultarSaldo();
+				System.out.println("Saldo em conta: " + conta.getSaldo());
 			}
 
 			// Saldo da conta
@@ -127,23 +133,22 @@ public class Main {
 				}
 
 				ContaBO contaBO = new ContaBO(conta);
-				// Retorna saldo
 				contaBO.consultarSaldo();
 			}
 
 			// Taxas
+//			else if (opcaoEscolhida == 5) {
+//				List<Conta> lConta = BancoDeDados.buscarTodasAsContas();
+//
+//				for (Conta conta : lConta) {
+//					ContaBO contaBO = new ContaBO(conta);
+//					contaBO.debitoCredito();
+//				}
+//			}
+
+			// Cadastrar PIX
 			else if (opcaoEscolhida == 5) {
-				List<Conta> lConta = BancoDeDados.buscarTodasAsContas();
-
-				for (Conta conta : lConta) {
-					ContaBO contaBO = new ContaBO(conta);
-					contaBO.debitoCredito();
-				}
-			}
-
-			// PIX
-			else if (opcaoEscolhida == 6) {
-				System.out.print("Número da conta que recebe: ");
+				System.out.print("Conta a ser cadastrado PIX: ");
 				String numeroConta = scanner.next();
 				Conta conta = BancoDeDados.buscaContaPorNumero(numeroConta);
 
@@ -157,7 +162,7 @@ public class Main {
 				String chavePix = "";
 				TipoChavePix tcp = null;
 
-				// Cadastrar PIX
+				// PIX chave Aleatória
 				if (tipoPix == 4) {
 					chavePix = UUID.randomUUID().toString();
 					tcp = TipoChavePix.ALEATORIO;
@@ -168,6 +173,7 @@ public class Main {
 					chavePix = scanner.next();
 				}
 				
+				// Outros TiposPix
 				Pix pix = new Pix();
 				pix.setAtivo(true);
 				pix.setChave(chavePix);
@@ -189,7 +195,7 @@ public class Main {
 			}
 			
 			// Transferencia PIX
-			else if (opcaoEscolhida == 7) {
+			else if (opcaoEscolhida == 6) {
 				System.out.print("Conta pagante: ");
 				String numeroConta = scanner.next();
 				
@@ -199,7 +205,7 @@ public class Main {
 					continue;
 				}
 				
-				System.out.print("Informe a chave PIX: ");
+				System.out.print("Informe a chave PIX da conta a receber: ");
 				String chavePix = scanner.next();
 				
 				Conta contaRecebe = BancoDeDados.getContaPorPix(chavePix);
@@ -216,40 +222,66 @@ public class Main {
 			}
 			
 			// Cadastrar CC CD
-			else if (opcaoEscolhida == 8) {
+			else if (opcaoEscolhida == 7) {
 				System.out.print("Número da conta: ");
 				String numeroConta = scanner.next();
 				Conta conta = BancoDeDados.buscaContaPorNumero(numeroConta);
 				
+				// É necessario ter uma conta cadastrada.
 				if (conta == null) {
+					System.out.println("É necessário ter uma conta cadastrada para solicitar Cartões");
 					continue;
 				}
 				
-				// Verifica TipoCliente e aumenta o Limite disponivel para CC e CD
+				// Verifica TipoCliente e aumenta o limite disponivel para CC e CD de acordo com TipoCliente.
 				TipoCliente tc = conta.getCliente().getTipoCliente();
 				double limite = 0;
 				if (tc == TipoCliente.COMUM) {
 					limite = 200;
-					System.out.print("Seu limite é de: " + limite);
 				}
 				else if (tc == TipoCliente.PREMIUM) {
 					limite = 1000;
-					System.out.print("Seu limite é de: " + limite);
 				}
 				else if (tc == TipoCliente.SUPER) {
 					limite = 5000;
-					System.out.print("Seu limite é de: " + limite);
 				}
 				
+				// Seleciona entre CD ou CC.
 				System.out.println("Qual tipo de cartão gostaria de solicitar? ");
-				System.out.print("1 - Cartão Débito - 1");
-				System.out.print("2 - Cartão Crédito - 2");
-				System.out.println("3 - Multi-Cartão - 3");
-				int opcaoCartão = scanner.nextInt();
+				System.out.println("1 - Cartão Débito - 1");
+				System.out.println("2 - Cartão Crédito - 2");
+				int opcaoCartao = scanner.nextInt();
 				
-				if (opcaoCartão == 1) {
+				// Cartão Débito.
+				if (opcaoCartao == 1) {
 					String numero = UUID.randomUUID().toString();
-					System.out.print("Bandeira\n1 - Visa\n 2- MasterCard");
+					System.out.print("Bandeira\n1 - Visa\n2 - MasterCard");
+					int tipoBandeira = scanner.nextInt();
+					Bandeira bandeiraCD;
+					
+					if (tipoBandeira == 1) {
+						bandeiraCD = Bandeira.VISA;
+					}
+					else if
+						(tipoBandeira == 2) {
+							bandeiraCD = Bandeira.MASTERCARD;
+					}
+					System.out.print("Digite a senha: ");
+					String senha = scanner.next();
+					
+					System.out.println("Seu cartão está ativo.\nSeu limite é: " + limite);
+					System.out.println("Número cartão: " + numero);
+					
+					// Adiciona CD a Conta do Cliente, e atualiza Lista de CD do Cliente.
+					CartaoDebito cd = new CartaoDebito(numero, bandeira, senha, true, limite);
+					ContaBO contaBO = new ContaBO(conta);
+					contaBO.adicionaCartaoDebito(cd);
+				}
+				
+				// Cartão Crédito.
+				else if (opcaoCartao == 2) {
+					String numero = UUID.randomUUID().toString();
+					System.out.print("Bandeira\n1 - Visa\n2 - MasterCard");
 					int tipoBandeira = scanner.nextInt();
 					Bandeira bandeiraCD = null;
 					
@@ -264,13 +296,55 @@ public class Main {
 					String senha = scanner.next();
 					
 					System.out.print("Seu cartão está ativo.\nSeu limite é: " + limite);
-					
-					CartaoDebito cd = new CartaoDebito(numero, bandeira, senha, true, limite);
+					System.out.println("Numero cartão: " + numero);
+
+					// Adiciona CC a Conta do Cliente, e atualiza Lista de CC do Cliente.
+					CartaoCredito cc = new CartaoCredito(numero, bandeira, senha, true, limite);
+					ContaBO contaBO = new ContaBO(conta);
+					contaBO.adicionaCartaoCredito(cc);
 				}
 			}
 			
-			// Efetuar compra
+			// Serviços para Cartão - Status e Bloqueio.
+			else if (opcaoEscolhida == 8) {
+				menu.menuCartao();
+				int opcaoCartao = scanner.nextInt();
+				
+				// Status do Cartão
+				if (opcaoCartao == 1) {
+				String numero = "";
+				
+				CartaoDebito cd = new CartaoDebito(numero, bandeira, senha, true, limite);
+				System.out.println("Número do cartão: " + cd.getNumero()
+						+ "\nBandeira: " + cd.getBandeira()
+						+ "\nSenha: " + cd.getSenha()
+						+ "\nStatus: " + cd.isAtivo()
+						+ "\nLimite: " + cd.getLimiteDebito());
+				}
+				
+				else if (opcaoCartao == 2) {
+					
+					// Bloqueia Cartao, Atribui False
+					String valorNumero = scanner.next();
+					CartaoDebito cartaoDebito = BancoDeDados.buscaCartaoDebito(valorNumero);
+				}
+			}
+			
+			
+			// Iniciar Compra
 			else if (opcaoEscolhida == 9) {
+				
+				System.out.print("Conta: ");
+				String numeroConta = scanner.next();
+				Conta conta = BancoDeDados.buscaContaPorNumero(numeroConta);
+				System.out.print("Cartão: ");
+				String numeroCartao = scanner.next();
+				CartaoDebito cartao = BancoDeDados.buscaCartaoDebito(numeroCartao);
+				
+				if (conta == null || cartao == null) {
+					System.out.println("Não foram encontrados Conta ou Cartão com os dados");
+					continue;
+				}
 				
 				menu.menuCompra();
 				int opcaoCompra = scanner.nextInt();
@@ -278,14 +352,13 @@ public class Main {
 				System.out.print("Quanto deseja gastar: ");
 				double valorCompra = scanner.nextDouble();
 				
-				System.out.print("Confirma compra no valor de R$ %.2f?\nS/N: ");
-				String confirmaCompra = scanner.next();
+				// Efetua Compra
+				ContaBO contaBO = new ContaBO(conta);
+				contaBO.comprarCartaoDebito(cartao, valorCompra);
 				
-				if (confirmaCompra == "S") {
-					
-				}
 			}
-			// Saida
+			
+			// Sair da Aplicação
 			else if (opcaoEscolhida == 0) {
 				System.out.println("Até logo!");
 				System.exit(0);
@@ -298,14 +371,11 @@ public class Main {
 		Endereco endereco = new Endereco();
 
 		scanner.nextLine();
-		System.out.print("Logradouro: ");
+		System.out.print("Endereço: ");
 		String logradouro = scanner.nextLine();
 
-		System.out.print("N�mero: ");
+		System.out.print("Número: ");
 		int numero = scanner.nextInt();
-
-		System.out.print("CEP: ");
-		String cep = scanner.next();
 
 		System.out.print("Bairro: ");
 		String bairro = scanner.next();
@@ -314,7 +384,10 @@ public class Main {
 		String cidade = scanner.next();
 
 		System.out.print("Estado: ");
-		String estado = scanner.nextLine();
+		String estado = scanner.next();
+		
+		System.out.print("CEP: ");
+		String cep = scanner.next();
 
 		endereco.setLogradouro(logradouro);
 		endereco.setNumero(numero);
@@ -327,7 +400,7 @@ public class Main {
 		System.out.print("Digite o nome do cliente: ");
 		String nome = scanner.nextLine();
 
-		String cpf = " . ";
+		String cpf;
 
 		while (true) {
 

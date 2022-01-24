@@ -30,15 +30,15 @@ public class ClienteBO {
 		try {
 			Long.parseLong(cpf);
 
-			if (cpf.length() == 11) {
+			if (cpf.length() == 1) {
 				return true;
 			}
-			System.out.println("CPF inv·lido");
+			System.out.println("CPF inv√°lido");
 			return false;
 		}
 
 		catch (Exception e) {
-			System.out.println("CPF inv·lido");
+			System.out.println("CPF inv√°lido");
 			return false;
 		}
 	}
