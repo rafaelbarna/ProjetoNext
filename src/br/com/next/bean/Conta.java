@@ -26,12 +26,12 @@ public class Conta {
 		this.cartaoDebito.add(cartaoDebito);
 	}
 
-	// Cartãos?
-	public List<CartaoDebito> getCartaos() {
+	
+	public List<CartaoDebito> getlistaCartaoDebito() {
 		return cartaoDebito;
 	}
 
-	public void setCartoes(List<CartaoDebito> cartaoDebito) {
+	public void setCartaoDebito(List<CartaoDebito> cartaoDebito) {
 		this.cartaoDebito = cartaoDebito;
 	}
 	
@@ -43,7 +43,13 @@ public class Conta {
 		this.cartaoCredito.add(cartaoCredito);
 	}
 	
+	public List<CartaoCredito> getlistaCartaoCredito() {
+		return cartaoCredito;
+	}
 	
+	public void setCartaoCredito(List<CartaoCredito> cartaoCredito) {
+		this.cartaoCredito = cartaoCredito;
+	}
 	
 	
 	public String getNumero() {
@@ -97,10 +103,4 @@ public class Conta {
 	public List<CartaoCredito> getCartaoCredito() {
 		return cartaoCredito;
 	}
-
-	public void setCartaoCredito(List<CartaoCredito> cartaoCredito) {
-		this.cartaoCredito = cartaoCredito;
-	}
-	
-	
 }

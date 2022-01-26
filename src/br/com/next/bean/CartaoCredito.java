@@ -11,8 +11,9 @@ public class CartaoCredito extends Cartao {
 	private List<Compras> compras;
 	private Date dataVencimento;
 	private double valorFatura;
+	private Apolice apolice;
 	
-	public CartaoCredito(String numero, Bandeira bandeira, String senha, boolean ativo, double limite) {
+	public CartaoCredito(String numero, Bandeira bandeira, String senha, boolean ativo, double limite, Date dataVencimento) {
 		super(numero, bandeira, senha, ativo);
 		this.limite = limite;
 		this.compras = new ArrayList<Compras>();
@@ -27,6 +28,12 @@ public class CartaoCredito extends Cartao {
 		return data;
 	}
 	
+	public Apolice getApolice() {
+		return apolice;
+	}
+	public void setApolice(Integer anosDuracao, TipoSeguro tipoSeguro) {
+		this.apolice = new Apolice(anosDuracao, tipoSeguro);
+	}
 	public double getLimite() {
 		return limite;
 	}

@@ -6,13 +6,14 @@ import java.util.List;
 import java.util.Map;
 
 import br.com.next.bean.Cartao;
+import br.com.next.bean.CartaoCredito;
 import br.com.next.bean.CartaoDebito;
 import br.com.next.bean.Conta;
 import br.com.next.bean.Pix;
 
 public class BancoDeDados {
 
-	// Static n�o precisa de refer�ncia
+	// Static não precisa de referãncia *
 	private static Map<String, Conta> BANCO_DE_DADOS = new HashMap<String, Conta>();
 
 	public static Conta buscaContaPorNumero(String numeroConta) {
@@ -70,14 +71,32 @@ public class BancoDeDados {
 		return null;
 	}
 
+	// Busca Cartão Débito no BD
 	public static CartaoDebito buscaCartaoDebito(String numeroCartao) {
 		for (Map.Entry<String, Conta> mapaConta : BancoDeDados.BANCO_DE_DADOS.entrySet()) {
 			Conta conta = mapaConta.getValue();
 			
-			// Cartãos? *
-			List<CartaoDebito> listaCartao = conta.getCartaos();
+			List<CartaoDebito> listaCartao = conta.getlistaCartaoDebito();
 			if (listaCartao != null) {
 				for (CartaoDebito cartao : listaCartao) {
+					if (cartao.getNumero().equals(numeroCartao)) {
+						return cartao;
+					}
+				}
+			}
+		}
+		System.out.println("Cartao não encontrado");
+		return null;
+	}
+	
+	// Busca Cartão Crédito no BD
+	public static CartaoCredito buscaCartaoCredito(String numeroCartao) {
+		for (Map.Entry<String, Conta> mapaConta : BancoDeDados.BANCO_DE_DADOS.entrySet()) {
+			Conta conta = mapaConta.getValue();
+			
+			List<CartaoCredito> listaCartao = conta.getlistaCartaoCredito();
+			if (listaCartao != null) {
+				for (CartaoCredito cartao : listaCartao) {
 					if (cartao.getNumero().equals(numeroCartao)) {
 						return cartao;
 					}

@@ -21,8 +21,6 @@ public class ClienteBO {
 		cliente.setTipoCliente(TipoCliente.COMUM);
 		cliente.setDataNascimento(dataNascimento);
 		cliente.setEndereco(endereco);
-		
-
 		return cliente;
 	}
 

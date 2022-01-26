@@ -128,6 +128,7 @@ public class ContaBO {
 		String nome = this.conta.getCliente().getNome();
 		String cpf = this.conta.getCliente().getCpf();
 		double valor = this.conta.getSaldo();
+		System.out.println("Saldo: " + valor);
 	}
 
 	// Adiciona função PIX a conta, e atualiza Conta com nova a função.
