@@ -8,7 +8,7 @@ import java.util.List;
 public class CartaoCredito extends Cartao {
 	
 	private double limite;
-	private List<Compras> compras;
+	private List<Compra> compra;
 	private Date dataVencimento;
 	private double valorFatura;
 	private Apolice apolice;
@@ -16,7 +16,7 @@ public class CartaoCredito extends Cartao {
 	public CartaoCredito(String numero, Bandeira bandeira, String senha, boolean ativo, double limite, Date dataVencimento) {
 		super(numero, bandeira, senha, ativo);
 		this.limite = limite;
-		this.compras = new ArrayList<Compras>();
+		this.compra = new ArrayList<Compra>();
 		this.dataVencimento = this.getDateAdd1Month();
 		this.valorFatura = 0;
 	}
@@ -31,14 +31,14 @@ public class CartaoCredito extends Cartao {
 	public Apolice getApolice() {
 		return apolice;
 	}
-	public void setApolice(Integer anosDuracao, TipoSeguro tipoSeguro) {
-		this.apolice = new Apolice(anosDuracao, tipoSeguro);
+	public void setApolice(int contrataMesSeguro, TipoSeguro tipoSeguro) {
+		this.apolice = new Apolice();
 	}
 	public double getLimite() {
 		return limite;
 	}
-	public List<Compras> getCompras() {
-		return compras;
+	public List<Compra> getCompras() {
+		return compra;
 	}
 	public Date getDataVencimento() {
 		return dataVencimento;
@@ -49,8 +49,8 @@ public class CartaoCredito extends Cartao {
 	public void setLimite(double limite) {
 		this.limite = limite;
 	}
-	public void setCompras(List<Compras> compras) {
-		this.compras = compras;
+	public void setCompras(List<Compra> compras) {
+		this.compra = compra;
 	}
 	public void setDataVencimento(Date dataVencimento) {
 		this.dataVencimento = dataVencimento;

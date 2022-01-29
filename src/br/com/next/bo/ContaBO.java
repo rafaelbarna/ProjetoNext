@@ -135,12 +135,14 @@ public class ContaBO {
 	public void adicionarPix(Pix pix) {
 		this.conta.setPix(pix);
 		BancoDeDados.insereConta(this.conta.getNumero(), this.conta);
+		System.out.println("PIX Ativado");
 	}
 
 	// Atribui o Cartão criado a Conta do Cliente, e atualiza Conta com novo Cartão.
 	public void adicionaCartaoDebito(CartaoDebito cartaoDebito) {
 		this.conta.addCartaoCD(cartaoDebito);
 		BancoDeDados.insereConta(this.conta.getNumero(), this.conta);
+		System.out.println("CARTÃO Ativado");
 	}
 
 	// Atribui o Cartão Crédito a Conta do Cliente, e atualiza Conta com novo
@@ -148,6 +150,7 @@ public class ContaBO {
 	public void adicionaCartaoCredito(CartaoCredito cartaoCredito) {
 		this.conta.addCartaoCC(cartaoCredito);
 		BancoDeDados.insereConta(this.conta.getNumero(), this.conta);
+		System.out.println("CARTÃO Ativado");
 	}
 
 	// Compra com Cartao Débito.

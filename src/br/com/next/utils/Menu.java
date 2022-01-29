@@ -1,10 +1,5 @@
 package br.com.next.utils;
 
-import java.io.InputStream;
-import java.util.Scanner;
-
-import br.com.next.bo.ContaBO;
-
 public class Menu {
 
 	public void exibirMenu() {
@@ -20,6 +15,7 @@ public class Menu {
 		System.out.println("7 - Solicitar Cartões - 7");
 		System.out.println("8 - Serviços para Cartões - 8");
 		System.out.println("9 - Fazer compras - 9");
+		System.out.println("10 - Seguros - 10");
 		System.out.println("0 - SAIR - 0");
 	}
 	
@@ -51,11 +47,9 @@ public class Menu {
 	}
 	
 	public void menuSeguro() {
-		System.out.println("Seguros:"
-				+ "1 - Sobre Seguros - 1"
-				+ "2 - Seguro Morte - 2"
-				+ "3 - Seguro Invalidez - 3"
-				+ "4 - Seguro Desempregro - 4");
+		System.out.println("1 - Sobre Seguros - 1\n"
+				+ "2 - Contratar - 2\n"
+				+ "3 - Consulta por ID");
 	}
 	
 	public void sobreSeguro() {

@@ -5,45 +5,40 @@
 
 package br.com.next.bean;
 
-import java.util.Calendar;
-
-import br.com.next.utils.Utils;
+import java.util.Date;
 
 public class Apolice {
 	
 	private int id;
+	private int valor;
+	private int valorTotal;
 	private TipoSeguro tipoSeguro;
-	private Calendar dataAssinatura;
-	private Calendar dataCarencia;
-	private Calendar dataValidade;
-
+	private int contrataMesSeguro;
+	private Date dataAssinatura;
+	private Date dataCarencia;
+	private Date dataValidade;
 	private Seguro seguro;
-	
-	public Apolice(int duracaoMes, TipoSeguro tipoSeguro) {
-		this.id = Utils.numeroRandomico(1, 10);
-		this.dataAssinatura = Calendar.getInstance();
-		
-		this.dataCarencia = getDataAssinatura();
-		this.dataCarencia.add(Calendar.DAY_OF_YEAR, 15);
-		
-		this.dataValidade = getDataAssinatura();
-		this.dataValidade.add(Calendar.MONTH, duracaoMes);
+	private CartaoCredito cartaoCredito;
+	private Boolean escolhaRegra;
+
+	// GETTERS AND SETTERS
+	public int getValorTotal() {
+		return valorTotal;
 	}
 
+	public void setValorTotal(int valorTotal) {
+		this.valorTotal = valorTotal;
+	}
+
+	public CartaoCredito getCartaoCredito() {
+		return cartaoCredito;
+	}
+
+	public void setCartaoCredito(CartaoCredito cartaoCredito) {
+		this.cartaoCredito = cartaoCredito;
+	}
 	public int getId() {
 		return id;
-	}
-
-	public Calendar getDataAssinatura() {
-		return dataAssinatura;
-	}
-
-	public Calendar getDataCarencia() {
-		return dataCarencia;
-	}
-
-	public Calendar getDataValidade() {
-		return dataValidade;
 	}
 
 	public Seguro getSeguro() {
@@ -52,18 +47,6 @@ public class Apolice {
 
 	public void setId(int id) {
 		this.id = id;
-	}
-
-	public void setDataAssinatura(Calendar dataAssinatura) {
-		this.dataAssinatura = dataAssinatura;
-	}
-
-	public void setDataCarencia(Calendar dataCarencia) {
-		this.dataCarencia = dataCarencia;
-	}
-
-	public void setDataValidade(Calendar dataValidade) {
-		this.dataValidade = dataValidade;
 	}
 
 	public void setSeguro(Seguro seguro) {
@@ -77,4 +60,52 @@ public class Apolice {
 	public void setTipoSeguro(TipoSeguro tipoSeguro) {
 		this.tipoSeguro = tipoSeguro;
 	}
+	
+	public int getValor() {
+		return valor;
+	}
+	public void setValor(int valor) {
+		this.valor = valor;
+	}
+
+	public Boolean getEscolhaRegra() {
+		return escolhaRegra;
+	}
+
+	public void setEscolhaRegra(Boolean escolhaRegra) {
+		this.escolhaRegra = escolhaRegra;
+	}
+
+	public int getContrataMesSeguro() {
+		return contrataMesSeguro;
+	}
+
+	public void setContrataMesSeguro(int contrataMesSeguro) {
+		this.contrataMesSeguro = contrataMesSeguro;
+	}
+
+	public Date getDataAssinatura() {
+		return dataAssinatura;
+	}
+
+	public void setDataAssinatura(Date dataAssinatura) {
+		this.dataAssinatura = dataAssinatura;
+	}
+
+	public Date getDataCarencia() {
+		return dataCarencia;
+	}
+
+	public void setDataCarencia(Date dataCarencia) {
+		this.dataCarencia = dataCarencia;
+	}
+
+	public Date getDataValidade() {
+		return dataValidade;
+	}
+
+	public void setDataValidade(Date dataValidade) {
+		this.dataValidade = dataValidade;
+	}
+
 }

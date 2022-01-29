@@ -5,9 +5,16 @@ package br.com.next.bean;
 
 public class Seguro {
 	
-	private Integer id;
+	private int id;
+	private int contrataMesSeguro;
 	private TipoSeguro tipoSeguro;
 	private boolean regras;
+	
+	public Seguro(CartaoCredito cartao, int id, TipoSeguro ts, int contrataMesSeguro, boolean escolhaRegra) {
+		super();
+		this.setContrataMesSeguro(contrataMesSeguro);
+		this.regras = escolhaRegra;
+	}
 	
 	// GETTERS AND SETTERS
 	public Integer getId() {
@@ -27,5 +34,13 @@ public class Seguro {
 	}
 	public void setRegras(boolean regras) {
 		this.regras = regras;
+	}
+
+	public int getContrataMesSeguro() {
+		return contrataMesSeguro;
+	}
+
+	public void setContrataMesSeguro(int contrataMesSeguro) {
+		this.contrataMesSeguro = contrataMesSeguro;
 	}
 }

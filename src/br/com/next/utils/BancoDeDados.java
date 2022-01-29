@@ -20,7 +20,6 @@ public class BancoDeDados {
 		Conta conta = BancoDeDados.BANCO_DE_DADOS.get(numeroConta);
 
 		if (conta == null) {
-			System.out.println("Conta não encontrada");
 			return null;
 		}
 
