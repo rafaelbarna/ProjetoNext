@@ -3,12 +3,12 @@ package br.com.next.utils;
 import java.text.ParseException;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
 
-import br.com.next.bean.Apolice;
 import br.com.next.bean.Bandeira;
 import br.com.next.bean.CartaoCredito;
 import br.com.next.bean.CartaoDebito;
@@ -16,6 +16,7 @@ import br.com.next.bean.Cliente;
 import br.com.next.bean.Conta;
 import br.com.next.bean.Endereco;
 import br.com.next.bean.Pix;
+import br.com.next.bean.Seguro;
 import br.com.next.bean.TipoChavePix;
 import br.com.next.bean.TipoCliente;
 import br.com.next.bean.TipoConta;
@@ -35,7 +36,19 @@ public class Main {
 
 		Scanner scanner = new Scanner(System.in);
 		Menu menu = new Menu();
+		
+		List<Seguro> seguros = new ArrayList<Seguro>();
+		seguro.setId("1");
+		seguro.setNome("Morte");
+		seguro.setRegras("Após a morte do Segurado");
+		
+		Seguro seguro1 = new Seguro();
+		seguro.setId("2");
+		seguro.setNome("Roubo");
+		seguro.setRegras("Quando furtado");
 
+		seguro.add(seguro);
+		
 		int opcaoEscolhida = -1;
 
 		while (opcaoEscolhida != 6) {
