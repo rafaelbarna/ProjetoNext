@@ -70,34 +70,16 @@ public class BancoDeDados {
 		return null;
 	}
 
-	// Busca Cartão Débito no BD
-	public static CartaoDebito buscaCartaoDebito(String numeroCartao) {
+	// Busca Cartão no BD
+	public static Conta buscaContaNumeroCartao(String numeroCartao) {
 		for (Map.Entry<String, Conta> mapaConta : BancoDeDados.BANCO_DE_DADOS.entrySet()) {
 			Conta conta = mapaConta.getValue();
 			
-			List<CartaoDebito> listaCartao = conta.getlistaCartaoDebito();
-			if (listaCartao != null) {
-				for (CartaoDebito cartao : listaCartao) {
+			List<Cartao> lCartao = conta.getCartao();
+			if (lCartao != null) {
+				for (Cartao cartao : lCartao) {
 					if (cartao.getNumero().equals(numeroCartao)) {
-						return cartao;
-					}
-				}
-			}
-		}
-		System.out.println("Cartao não encontrado");
-		return null;
-	}
-	
-	// Busca Cartão Crédito no BD
-	public static CartaoCredito buscaCartaoCredito(String numeroCartao) {
-		for (Map.Entry<String, Conta> mapaConta : BancoDeDados.BANCO_DE_DADOS.entrySet()) {
-			Conta conta = mapaConta.getValue();
-			
-			List<CartaoCredito> listaCartao = conta.getlistaCartaoCredito();
-			if (listaCartao != null) {
-				for (CartaoCredito cartao : listaCartao) {
-					if (cartao.getNumero().equals(numeroCartao)) {
-						return cartao;
+						return conta;
 					}
 				}
 			}

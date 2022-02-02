@@ -14,44 +14,29 @@ public class Conta {
 	private Pix pix;
 	private TipoConta tipoConta;
 	private Date data;
-	private List<CartaoDebito> cartaoDebito = new ArrayList<>();
-	private List<CartaoCredito> cartaoCredito = new ArrayList<>();
-	
-	
-	// Cria lista de CD caso vazio. Se não adiciona CD a lista com dados do Main (7)
-	public void addCartaoCD(CartaoDebito cartaoDebito) {
-		if (this.cartaoDebito == null) {
-			return;
+	private List<Cartao> cartao;
+
+	// Métodos
+	public void addCartao(Cartao cartao) {
+		if (this.cartao == null) {
+			this.cartao = new ArrayList<Cartao>();
 		}
-		this.cartaoDebito.add(cartaoDebito);
+		this.cartao.add(cartao);
 	}
 
-	
-	public List<CartaoDebito> getlistaCartaoDebito() {
-		return cartaoDebito;
+	public void alteraCartaoCredito(CartaoCredito cartaoCredito) {
+		List<Cartao> lCartao = new ArrayList<Cartao>();
+		for (Cartao cartao : this.cartao) {
+			if (cartao.getClass().getSimpleName().toLowerCase().contains("credito")) {
+				lCartao.add(cartaoCredito);
+			} else {
+				lCartao.add(cartao);
+			}
+		}
+		this.cartao = lCartao;
 	}
 
-	public void setCartaoDebito(List<CartaoDebito> cartaoDebito) {
-		this.cartaoDebito = cartaoDebito;
-	}
-	
-	// Cria lista de CC caso vazio. Se não adiciona CC a lista com dados do Main (7)
-	public void addCartaoCC(CartaoCredito cartaoCredito) {
-		if (this.cartaoCredito == null) {
-			this.cartaoCredito = new ArrayList<CartaoCredito>();
-		}
-		this.cartaoCredito.add(cartaoCredito);
-	}
-	
-	public List<CartaoCredito> getlistaCartaoCredito() {
-		return cartaoCredito;
-	}
-	
-	public void setCartaoCredito(List<CartaoCredito> cartaoCredito) {
-		this.cartaoCredito = cartaoCredito;
-	}
-	
-	
+	// Getters e Setters
 	public String getNumero() {
 		return numero;
 	}
@@ -100,7 +85,7 @@ public class Conta {
 		this.data = data;
 	}
 
-	public List<CartaoCredito> getCartaoCredito() {
-		return cartaoCredito;
+	public List<Cartao> getCartao() {
+		return cartao;
 	}
 }

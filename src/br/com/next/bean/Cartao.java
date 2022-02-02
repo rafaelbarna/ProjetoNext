@@ -1,5 +1,6 @@
 package br.com.next.bean;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 public abstract class Cartao {

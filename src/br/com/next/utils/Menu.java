@@ -12,10 +12,13 @@ public class Menu {
 		System.out.println("4 - Saldo - 4");
 		System.out.println("5 - Cadastrar PIX - 5");
 		System.out.println("6 - Transferência PIX - 6");
-		System.out.println("7 - Solicitar Cartões - 7");
-		System.out.println("8 - Serviços para Cartões - 8");
-		System.out.println("9 - Fazer compras - 9");
-		System.out.println("10 - Seguros - 10");
+		System.out.println("7 - Solicitar Cartão - 7");
+		System.out.println("8 - Menu Cartão - 8");
+		System.out.println("9 - Compra com Cartão de Crédito - 9");
+		System.out.println("10 - Compra com Cartão de Débito - 10");
+		System.out.println("15 - Fatura - 15");
+
+		System.out.println("15 - Seguros - 15");
 		System.out.println("0 - SAIR - 0");
 	}
 	

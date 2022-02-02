@@ -1,16 +1,19 @@
 package br.com.next.bo;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 import br.com.next.bean.Cartao;
 import br.com.next.bean.CartaoCredito;
 import br.com.next.bean.CartaoDebito;
 import br.com.next.bean.Cliente;
-
+import br.com.next.bean.Compra;
 import br.com.next.bean.Conta;
 import br.com.next.bean.Pix;
+import br.com.next.bean.TipoCliente;
 import br.com.next.bean.TipoConta;
 import br.com.next.utils.BancoDeDados;
 
@@ -117,9 +120,18 @@ public class ContaBO {
 
 	// Deposita em conta Valor na Conta do Cliente, e atualiza Saldo da Conta com novo Valor.
 	public void depositar(double valor) {
-		double meuSaldo = this.conta.getSaldo();
-		meuSaldo += valor;
-		this.conta.setSaldo(meuSaldo);
+		double saldoConta = this.conta.getSaldo();
+		saldoConta += valor;
+		this.conta.setSaldo(saldoConta);
+		
+		if(saldoConta <= 5000){
+			this.conta.getCliente().setTipoCliente(TipoCliente.COMUM);
+		}else if(saldoConta > 5000 && saldoConta <= 10000) {
+			this.conta.getCliente().setTipoCliente(TipoCliente.PREMIUM);
+		}else {
+			this.conta.getCliente().setTipoCliente(TipoCliente.SUPER);
+		}
+		
 		BancoDeDados.insereConta(this.conta.getNumero(), this.conta);
 	}
 
@@ -139,22 +151,13 @@ public class ContaBO {
 	}
 
 	// Atribui o Cartão criado a Conta do Cliente, e atualiza Conta com novo Cartão.
-	public void adicionaCartaoDebito(CartaoDebito cartaoDebito) {
-		this.conta.addCartaoCD(cartaoDebito);
+	public void adicionaCartao(Cartao cartao) {
+		this.conta.addCartao(cartao);
 		BancoDeDados.insereConta(this.conta.getNumero(), this.conta);
-		System.out.println("CARTÃO Ativado");
-	}
-
-	// Atribui o Cartão Crédito a Conta do Cliente, e atualiza Conta com novo
-	// Cartão.
-	public void adicionaCartaoCredito(CartaoCredito cartaoCredito) {
-		this.conta.addCartaoCC(cartaoCredito);
-		BancoDeDados.insereConta(this.conta.getNumero(), this.conta);
-		System.out.println("CARTÃO Ativado");
 	}
 
 	// Compra com Cartao Débito.
-	public void comprarCartaoDebito(Cartao cartao, double valor) {
+	public void compraCartaoDebito(Cartao cartao, double valor) {
 		CartaoDebito cartaoDebito = (CartaoDebito) cartao;
 		double saldoConta = this.conta.getSaldo();
 
@@ -162,8 +165,52 @@ public class ContaBO {
 		if (cartaoDebito.getLimiteDebito() < valor || saldoConta > valor) {
 			saldoConta = saldoConta - valor;
 			this.conta.setSaldo(saldoConta);
+			BancoDeDados.insereConta(this.conta.getNumero(), this.conta);
+			System.out.println("Compra Efetuada");
 		} else {
 			System.out.println("Saldo insuficiente");
+		}
+	}
+	
+	public void compraCartaoCredito(Cartao cartao, double valor) {
+		CartaoCredito cartaoCredito = (CartaoCredito) cartao;
+		
+		if(cartaoCredito.getLimite() >= valor) {
+			Compra compra = new Compra(new Date(), valor);
+			cartaoCredito.addCompras(compra);
+			double limite = cartaoCredito.getLimite();
+			limite -= valor;
+			cartaoCredito.setLimite(limite);
+			
+			double valorFatura = cartaoCredito.getValorFatura();
+			valorFatura += valor;
+			cartaoCredito.setValorFatura(valorFatura);
+			
+			this.conta.alteraCartaoCredito(cartaoCredito);
+			
+			
+			BancoDeDados.insereConta(this.conta.getNumero(), this.conta);
+		}
+		else {
+			System.out.println("Recusado");
+		}
+	}
+
+	public void exibirFatura(Cartao cartao) {
+		CartaoCredito cartaoCredito = (CartaoCredito) cartao;
+		List<Compra> lCompra = cartaoCredito.getCompras();
+		System.out.println("Limite: " + cartaoCredito.getLimite());
+		System.out.println("Fatura: " + cartaoCredito.getValorFatura());
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		String data = sdf.format(cartaoCredito.getDataVencimento());
+		System.out.println("Vencimento: " + data);
+		SimpleDateFormat sdfHora = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		
+		for(Compra compra : lCompra) {
+			String dataCompra = sdfHora.format(compra.getCompra());
+			double valor = compra.getValor();
+			System.out.println("Dia: " + dataCompra + " - Valor: " + valor);
 		}
 	}
 }
